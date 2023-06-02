@@ -1,0 +1,16 @@
+import express from "express";
+import multer from "multer";
+
+import {
+  getUser,
+ 
+} from "../controllers/users.js";
+
+import { verifyToken } from "../middleware/auth.js";
+
+const router = express.Router();
+
+router.get("/:id", verifyToken, getUser);
+
+
+export default router;
