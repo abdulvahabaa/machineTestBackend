@@ -3,29 +3,21 @@ import {
   createPost,
   deletePost,
   editPost,
-
-
 } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
 import multer from "multer";
 
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname);
-    },
-  });
-  const upload = multer({ storage });
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage:storage })
   
 
 const router = express.Router();
 
 // create post
-router.post("/create", verifyToken, upload.single("picture"), createPost);
+router.post("/create",verifyToken,  upload.single("picture"), createPost);
 
 
 /* Delete */

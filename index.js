@@ -12,13 +12,34 @@ import { register } from "./controllers/auth.js"
 import  authRoutes from "./routes/auth.js"
 import userRoutes from "./routes/user.js"
 import postRoutes from "./routes/post.js"
-
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 /* CONFIGURATIONS */
+
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const accessKey = process.env.ACCESS_KEY
+const secretAcessKey = process.env.SECRET_ACCESS_KEY
+
+const s3 = new S3Client({
+  credentials:{
+    accessKeyId:accessKey,
+    secretAcessKey:secretAcessKey,
+  },
+  region: bucketRegion
+
+})
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage:storage })
+
+
+
 
 const app = express();
 
@@ -32,15 +53,15 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname);
-    },
-  });
-  const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, "public/assets");
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname);
+//     },
+//   });
+//   const upload = multer({ storage });
 
 
 
